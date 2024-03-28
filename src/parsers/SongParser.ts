@@ -26,6 +26,7 @@ export default class SongParser {
 
 	public static parseSearchResult(item: any): SongDetailed {
 		const columns = traverseList(item, "flexColumns", "runs")
+            const menu = traverseList(item, "menu", "items");
 
 		// It is not possible to identify the title and author
 		const title = columns[0]
@@ -37,6 +38,8 @@ export default class SongParser {
 			{
 				type: "SONG",
 				videoId: traverseString(item, "playlistItemData", "videoId"),
+                        playlistId: traverseString(menu, "navigationEndpoint", "playlistId"),
+                        params: traverseString(menu, "navigationEndpoint", "params"),
 				name: traverseString(title, "text"),
 				artist: {
 					name: traverseString(artist, "text"),
@@ -55,6 +58,7 @@ export default class SongParser {
 
 	public static parseArtistSong(item: any, artistBasic: ArtistBasic): SongDetailed {
 		const columns = traverseList(item, "flexColumns", "runs").flat()
+            const menu = traverseList(item, "menu", "items");
 
 		const title = columns.find(isTitle)
 		const album = columns.find(isAlbum)
@@ -64,6 +68,8 @@ export default class SongParser {
 			{
 				type: "SONG",
 				videoId: traverseString(item, "playlistItemData", "videoId"),
+                        playlistId: traverseString(menu, "navigationEndpoint", "playlistId"),
+                        params: traverseString(menu, "navigationEndpoint", "params"),
 				name: traverseString(title, "text"),
 				artist: artistBasic,
 				album: {
@@ -79,6 +85,7 @@ export default class SongParser {
 
 	public static parseArtistTopSong(item: any, artistBasic: ArtistBasic): SongDetailed {
 		const columns = traverseList(item, "flexColumns", "runs").flat()
+            const menu = traverseList(item, "menu", "items");
 
 		const title = columns.find(isTitle)
 		const album = columns.find(isAlbum)
@@ -87,6 +94,8 @@ export default class SongParser {
 			{
 				type: "SONG",
 				videoId: traverseString(item, "playlistItemData", "videoId"),
+                        playlistId: traverseString(menu, "navigationEndpoint", "playlistId"),
+                        params: traverseString(menu, "navigationEndpoint", "params"),
 				name: traverseString(title, "text"),
 				artist: artistBasic,
 				album: {
@@ -107,6 +116,7 @@ export default class SongParser {
 		thumbnails: ThumbnailFull[],
 	): SongDetailed {
 		const columns = traverseList(item, "flexColumns", "runs").flat()
+            const menu = traverseList(item, "menu", "items");
 
 		const title = columns.find(isTitle)
 		const duration = columns.find(isDuration)
@@ -115,6 +125,8 @@ export default class SongParser {
 			{
 				type: "SONG",
 				videoId: traverseString(item, "playlistItemData", "videoId"),
+                        playlistId: traverseString(menu, "navigationEndpoint", "playlistId"),
+                        params: traverseString(menu, "navigationEndpoint", "params"),
 				name: traverseString(title, "text"),
 				artist: artistBasic,
 				album: albumBasic,
