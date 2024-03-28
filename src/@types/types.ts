@@ -155,3 +155,15 @@ export const HomePageContent = type({
 		"[]",
 	],
 })
+
+export type NextResult = typeof NextResult.infer
+export const NextResult = type({
+      index: "number",
+	name: "string",
+      artist: "string",
+      playlistId: "string",
+      videoId: "string",
+      selected: "boolean",
+      params: "string",
+      thumbnails: [ThumbnailFull, "[]"],
+})

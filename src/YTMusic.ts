@@ -7,6 +7,7 @@ import {
 	ArtistDetailed,
 	ArtistFull,
 	HomePageContent,
+	NextResult,
 	PlaylistDetailed,
 	PlaylistFull,
 	SearchResult,
@@ -18,6 +19,7 @@ import {
 import { FE_MUSIC_HOME } from "./constants"
 import AlbumParser from "./parsers/AlbumParser"
 import ArtistParser from "./parsers/ArtistParser"
+import NextParser from "./parsers/NextParser"
 import Parser from "./parsers/Parser"
 import PlaylistParser from "./parsers/PlaylistParser"
 import SearchParser from "./parsers/SearchParser"
@@ -527,4 +529,27 @@ export default class YTMusic {
 
 		return results
 	}
+
+      /**
+	 * Get content for next song.
+	 *
+       * @param videoId Video ID
+	 * @param playlistId Playlist ID
+       * @param paramString
+       * 
+	 * @returns List of the next song
+	 */
+      async getNext(videoId: string, playlistId: string, paramString?: string): Promise<NextResult[]> {
+            const data = await this.constructRequest('next', {
+                  enablePersistentPlaylistPanel: true,
+                  isAudioOnly: true,
+                  params: paramString,
+                  playlistId: playlistId,
+                  tunerSettingValue: "AUTOMIX_SETTING_NORMAL",
+                  videoId: videoId
+            });
+
+            const contents = traverse(traverseList(data, "tabs", "tabRenderer")[0], "contents");
+            return contents.map(NextParser.parse);
+      }
 }
