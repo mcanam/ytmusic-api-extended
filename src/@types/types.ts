@@ -23,6 +23,8 @@ export type SongDetailed = typeof SongDetailed.infer
 export const SongDetailed = type({
 	type: '"SONG"',
 	videoId: "string",
+      "playlistId?": "string",
+      "params?": "string",
 	name: "string",
 	artist: ArtistBasic,
 	album: union(AlbumBasic, "null"),
@@ -34,6 +36,8 @@ export type VideoDetailed = typeof VideoDetailed.infer
 export const VideoDetailed = type({
 	type: '"VIDEO"',
 	videoId: "string",
+      "playlistId?": "string",
+      "params?": "string",
 	name: "string",
 	artist: ArtistBasic,
 	duration: "number|null",

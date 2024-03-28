@@ -25,6 +25,7 @@ export default class VideoParser {
 
 	public static parseSearchResult(item: any): VideoDetailed {
 		const columns = traverseList(item, "flexColumns", "runs").flat()
+            const menu = traverseList(item, "menu", "items");
 
 		const title = columns.find(isTitle)
 		const artist = columns.find(isArtist) || columns[1]
@@ -33,6 +34,8 @@ export default class VideoParser {
 		return {
 			type: "VIDEO",
 			videoId: traverseString(item, "playNavigationEndpoint", "videoId"),
+                  playlistId: traverseString(menu, "navigationEndpoint", "playlistId"),
+                  params: traverseString(menu, "navigationEndpoint", "params"),
 			name: traverseString(title, "text"),
 			artist: {
 				artistId: traverseString(artist, "browseId") || null,
