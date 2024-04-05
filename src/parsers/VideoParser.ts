@@ -71,7 +71,7 @@ export default class VideoParser {
 					traverseString(item, "playNavigationEndpoint", "videoId") ||
 					traverseList(item, "thumbnails")[0].url.match(
 						/https:\/\/i\.ytimg\.com\/vi\/(.+)\//,
-					)[1],
+					)?.[1],
 				name: traverseString(title, "text"),
 				artist: {
 					name: traverseString(artist, "text"),
