@@ -59,6 +59,7 @@ export default class VideoParser {
 
 	public static parsePlaylistVideo(item: any): VideoDetailed {
 		const columns = traverseList(item, "flexColumns", "runs").flat()
+            const menu = traverseList(item, "menu", "items");
 
 		const title = columns.find(isTitle) || columns[0]
 		const artist = columns.find(isArtist) || columns[1]
@@ -72,6 +73,8 @@ export default class VideoParser {
 					traverseList(item, "thumbnails")[0].url.match(
 						/https:\/\/i\.ytimg\.com\/vi\/(.+)\//,
 					)?.[1],
+                        playlistId: traverseString(menu, "navigationEndpoint", "playlistId"),
+                        params: traverseString(menu, "navigationEndpoint", "params"),
 				name: traverseString(title, "text"),
 				artist: {
 					name: traverseString(artist, "text"),
