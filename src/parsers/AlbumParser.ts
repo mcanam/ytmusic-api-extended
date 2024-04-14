@@ -24,6 +24,11 @@ export default class AlbumParser {
 				type: "ALBUM",
 				...albumBasic,
 				playlistId: traverseString(data, "buttonRenderer", "playlistId"),
+				/**
+				 * What could this Parse be? How do we get into it?
+				 * Then we define the main artist in the list
+				 */
+				artists: [artistBasic],
 				artist: artistBasic,
 				year: AlbumParser.processYear(
 					traverseList(data, "header", "subtitle", "text").at(-1),
@@ -42,6 +47,7 @@ export default class AlbumParser {
 
 		// No specific way to identify the title
 		const title = columns[0]
+		const artists = columns.filter(isArtist)
 		const artist = columns.find(isArtist) || columns[3]
 		const playlistId =
 			traverseString(item, "overlay", "playlistId") ||
@@ -52,6 +58,12 @@ export default class AlbumParser {
 				type: "ALBUM",
 				albumId: traverseList(item, "browseId").at(-1),
 				playlistId,
+				artists: artists.map(artist => {
+					return {
+						name: traverseString(artist, "text"),
+						artistId: traverseString(artist, "browseId") || null,
+					}
+				}),
 				artist: {
 					name: traverseString(artist, "text"),
 					artistId: traverseString(artist, "browseId") || null,
@@ -71,6 +83,7 @@ export default class AlbumParser {
 				albumId: traverseList(item, "browseId").at(-1),
 				playlistId: traverseString(item, "thumbnailOverlay", "playlistId"),
 				name: traverseString(item, "title", "text"),
+				artists: [artistBasic],
 				artist: artistBasic,
 				year: AlbumParser.processYear(traverseList(item, "subtitle", "text").at(-1)),
 				thumbnails: traverseList(item, "thumbnails"),
@@ -86,6 +99,7 @@ export default class AlbumParser {
 				albumId: traverseList(item, "browseId").at(-1),
 				playlistId: traverseString(item, "musicPlayButtonRenderer", "playlistId"),
 				name: traverseString(item, "title", "text"),
+				artists: [artistBasic],
 				artist: artistBasic,
 				year: AlbumParser.processYear(traverseList(item, "subtitle", "text").at(-1)),
 				thumbnails: traverseList(item, "thumbnails"),

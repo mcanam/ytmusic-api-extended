@@ -10,6 +10,16 @@ export default class VideoParser {
 			type: "VIDEO",
 			videoId: traverseString(data, "videoDetails", "videoId"),
 			name: traverseString(data, "videoDetails", "title"),
+			/**
+			 * What could this Parse be? How do we get into it?
+			 * Then we define the main artist in the list
+			 */
+			artists: [
+				{
+					artistId: traverseString(data, "videoDetails", "channelId"),
+					name: traverseString(data, "author"),
+				},
+			],
 			artist: {
 				artistId: traverseString(data, "videoDetails", "channelId"),
 				name: traverseString(data, "author"),
@@ -25,18 +35,25 @@ export default class VideoParser {
 
 	public static parseSearchResult(item: any): VideoDetailed {
 		const columns = traverseList(item, "flexColumns", "runs").flat()
-            const menu = traverseList(item, "menu", "items");
+		const menu = traverseList(item, "menu", "items")
 
 		const title = columns.find(isTitle)
+		const artists = columns.filter(isArtist)
 		const artist = columns.find(isArtist) || columns[1]
 		const duration = columns.find(isDuration)
 
 		return {
 			type: "VIDEO",
 			videoId: traverseString(item, "playNavigationEndpoint", "videoId"),
-                  playlistId: traverseString(menu, "navigationEndpoint", "playlistId"),
-                  params: traverseString(menu, "navigationEndpoint", "params"),
+			playlistId: traverseString(menu, "navigationEndpoint", "playlistId"),
+			params: traverseString(menu, "navigationEndpoint", "params"),
 			name: traverseString(title, "text"),
+			artists: artists.map(artist => {
+				return {
+					name: traverseString(artist, "text"),
+					artistId: traverseString(artist, "browseId") || null,
+				}
+			}),
 			artist: {
 				artistId: traverseString(artist, "browseId") || null,
 				name: traverseString(artist, "text"),
@@ -51,6 +68,7 @@ export default class VideoParser {
 			type: "VIDEO",
 			videoId: traverseString(item, "videoId"),
 			name: traverseString(item, "runs", "text"),
+			artists: [artistBasic],
 			artist: artistBasic,
 			duration: null,
 			thumbnails: traverseList(item, "thumbnails"),
@@ -59,10 +77,11 @@ export default class VideoParser {
 
 	public static parsePlaylistVideo(item: any): VideoDetailed {
 		const columns = traverseList(item, "flexColumns", "runs").flat()
-            const menu = traverseList(item, "menu", "items");
+		const menu = traverseList(item, "menu", "items")
 
 		const title = columns.find(isTitle) || columns[0]
 		const artist = columns.find(isArtist) || columns[1]
+		const artists = columns.filter(isArtist)
 		const duration = columns.find(isDuration)
 
 		return checkType(
@@ -73,9 +92,15 @@ export default class VideoParser {
 					traverseList(item, "thumbnails")[0].url.match(
 						/https:\/\/i\.ytimg\.com\/vi\/(.+)\//,
 					)?.[1],
-                        playlistId: traverseString(menu, "navigationEndpoint", "playlistId"),
-                        params: traverseString(menu, "navigationEndpoint", "params"),
+				playlistId: traverseString(menu, "navigationEndpoint", "playlistId"),
+				params: traverseString(menu, "navigationEndpoint", "params"),
 				name: traverseString(title, "text"),
+				artists: artists.map(artist => {
+					return {
+						name: traverseString(artist, "text"),
+						artistId: traverseString(artist, "browseId") || null,
+					}
+				}),
 				artist: {
 					name: traverseString(artist, "text"),
 					artistId: traverseString(artist, "browseId") || null,
