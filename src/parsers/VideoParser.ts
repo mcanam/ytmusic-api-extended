@@ -24,7 +24,7 @@ export default class VideoParser {
 				artistId: traverseString(data, "videoDetails", "channelId"),
 				name: traverseString(data, "author"),
 			},
-			views: +traverseString(data, "videoDetails", "views"),
+			views: +traverseString(data, "videoDetails", "viewCount"),
 			duration: +traverseString(data, "videoDetails", "lengthSeconds"),
 			thumbnails: traverseList(data, "videoDetails", "thumbnails"),
 			unlisted: traverse(data, "unlisted"),

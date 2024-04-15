@@ -25,7 +25,7 @@ export default class SongParser {
 					name: traverseString(data, "author"),
 					artistId: traverseString(data, "videoDetails", "channelId"),
 				},
-				views: +traverseString(data, "videoDetails", "views"),
+				views: +traverseString(data, "videoDetails", "viewCount"),
 				duration: +traverseString(data, "videoDetails", "lengthSeconds"),
 				thumbnails: traverseList(data, "videoDetails", "thumbnails"),
 				formats: traverseList(data, "streamingData", "formats"),
