@@ -24,6 +24,7 @@ export default class VideoParser {
 				artistId: traverseString(data, "videoDetails", "channelId"),
 				name: traverseString(data, "author"),
 			},
+			views: +traverseString(data, "videoDetails", "views"),
 			duration: +traverseString(data, "videoDetails", "lengthSeconds"),
 			thumbnails: traverseList(data, "videoDetails", "thumbnails"),
 			unlisted: traverse(data, "unlisted"),
@@ -36,6 +37,9 @@ export default class VideoParser {
 	public static parseSearchResult(item: any): VideoDetailed {
 		const columns = traverseList(item, "flexColumns", "runs").flat()
 		const menu = traverseList(item, "menu", "items")
+
+		const views =
+			columns.find(obj => obj.text.includes("views") && !obj.navigationEndpoint) ?? null
 
 		const title = columns.find(isTitle)
 		const artists = columns.filter(isArtist)
@@ -58,6 +62,7 @@ export default class VideoParser {
 				artistId: traverseString(artist, "browseId") || null,
 				name: traverseString(artist, "text"),
 			},
+			views: Parser.parseViews(views.text),
 			duration: Parser.parseDuration(duration.text),
 			thumbnails: traverseList(item, "thumbnails"),
 		}
@@ -70,6 +75,7 @@ export default class VideoParser {
 			name: traverseString(item, "runs", "text"),
 			artists: [artistBasic],
 			artist: artistBasic,
+			views: null,
 			duration: null,
 			thumbnails: traverseList(item, "thumbnails"),
 		}
@@ -78,6 +84,9 @@ export default class VideoParser {
 	public static parsePlaylistVideo(item: any): VideoDetailed {
 		const columns = traverseList(item, "flexColumns", "runs").flat()
 		const menu = traverseList(item, "menu", "items")
+
+		const views =
+			columns.find(obj => obj.text.includes("views") && !obj.navigationEndpoint) ?? null
 
 		const title = columns.find(isTitle) || columns[0]
 		const artist = columns.find(isArtist) || columns[1]
@@ -105,6 +114,7 @@ export default class VideoParser {
 					name: traverseString(artist, "text"),
 					artistId: traverseString(artist, "browseId") || null,
 				},
+				views: views ? Parser.parseViews(views.text) : null,
 				duration: duration ? Parser.parseDuration(duration.text) : null,
 				thumbnails: traverseList(item, "thumbnails"),
 			},

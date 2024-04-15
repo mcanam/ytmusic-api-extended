@@ -29,6 +29,7 @@ export const SongDetailed = type({
 	artists: [ArtistBasic, "[]"],
 	artist: ArtistBasic,
 	album: union(AlbumBasic, "null"),
+	views: "number|null",
 	duration: "number|null",
 	thumbnails: [ThumbnailFull, "[]"],
 })
@@ -42,6 +43,7 @@ export const VideoDetailed = type({
 	name: "string",
 	artists: [ArtistBasic, "[]"],
 	artist: ArtistBasic,
+	views: "number|null",
 	duration: "number|null",
 	thumbnails: [ThumbnailFull, "[]"],
 })
@@ -83,6 +85,7 @@ export const SongFull = type({
 	name: "string",
 	artists: [ArtistBasic, "[]"],
 	artist: ArtistBasic,
+	views: "number",
 	duration: "number",
 	thumbnails: [ThumbnailFull, "[]"],
 	formats: "any[]",
@@ -96,6 +99,7 @@ export const VideoFull = type({
 	name: "string",
 	artists: [ArtistBasic, "[]"],
 	artist: ArtistBasic,
+	views: "number",
 	duration: "number",
 	thumbnails: [ThumbnailFull, "[]"],
 	unlisted: "boolean",
