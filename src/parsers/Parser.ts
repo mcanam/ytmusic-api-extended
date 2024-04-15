@@ -36,6 +36,19 @@ export default class Parser {
 		}
 	}
 
+	public static parseViews(text: string): number {
+		const multipliers: { [key: string]: number } = { K: 1e3, M: 1e6, B: 1e9, T: 1e12 }
+		const match = text.match(/([\d.]+)([KMBT])?/i)
+
+		if (match && match[1]) {
+			const number = parseFloat(match[1])
+			const scale = match[2]?.toUpperCase() || ""
+			return Math.round(number * (multipliers[scale] || 1))
+		}
+
+		return 0
+	}
+
 	/**
 	 * Parses mixed content data into a structured `HomePageContent` object.
 	 *

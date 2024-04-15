@@ -12,6 +12,16 @@ export default class PlaylistParser {
 				type: "PLAYLIST",
 				playlistId,
 				name: traverseString(data, "header", "title", "text"),
+				/**
+				 * What could this Parse be? How do we get into it?
+				 * Then we define the main artist in the list
+				 */
+				artists: [
+					{
+						name: traverseString(artist, "text"),
+						artistId: traverseString(artist, "browseId") || null,
+					},
+				],
 				artist: {
 					name: traverseString(artist, "text"),
 					artistId: traverseString(artist, "browseId") || null,
@@ -34,12 +44,19 @@ export default class PlaylistParser {
 		// No specific way to identify the title
 		const title = columns[0]
 		const artist = columns.find(isArtist) || columns[3]
+		const artists = columns.filter(isArtist)
 
 		return checkType(
 			{
 				type: "PLAYLIST",
 				playlistId: traverseString(item, "overlay", "playlistId"),
 				name: traverseString(title, "text"),
+				artists: artists.map(artist => {
+					return {
+						name: traverseString(artist, "text"),
+						artistId: traverseString(artist, "browseId") || null,
+					}
+				}),
 				artist: {
 					name: traverseString(artist, "text"),
 					artistId: traverseString(artist, "browseId") || null,
@@ -56,6 +73,7 @@ export default class PlaylistParser {
 				type: "PLAYLIST",
 				playlistId: traverseString(item, "navigationEndpoint", "browseId"),
 				name: traverseString(item, "runs", "text"),
+				artists: [artistBasic],
 				artist: artistBasic,
 				thumbnails: traverseList(item, "thumbnails"),
 			},
