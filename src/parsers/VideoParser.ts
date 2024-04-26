@@ -24,7 +24,7 @@ export default class VideoParser {
 				artistId: traverseString(data, "videoDetails", "channelId"),
 				name: traverseString(data, "author"),
 			},
-			views: +traverseString(data, "videoDetails", "views"),
+			views: +traverseString(data, "videoDetails", "viewCount"),
 			duration: +traverseString(data, "videoDetails", "lengthSeconds"),
 			thumbnails: traverseList(data, "videoDetails", "thumbnails"),
 			unlisted: traverse(data, "unlisted"),
@@ -38,8 +38,7 @@ export default class VideoParser {
 		const columns = traverseList(item, "flexColumns", "runs").flat()
 		const menu = traverseList(item, "menu", "items")
 
-		const views =
-			columns.find(obj => obj.text.includes("views") && !obj.navigationEndpoint) ?? null
+		const views = columns.find(obj => obj.text.includes("views") && !obj.navigationEndpoint)
 
 		const title = columns.find(isTitle)
 		const artists = columns.filter(isArtist)
@@ -62,8 +61,8 @@ export default class VideoParser {
 				artistId: traverseString(artist, "browseId") || null,
 				name: traverseString(artist, "text"),
 			},
-			views: Parser.parseViews(views.text),
-			duration: Parser.parseDuration(duration.text),
+			views: views ? Parser.parseViews(views.text) : null,
+			duration: duration ? Parser.parseDuration(duration.text) : null,
 			thumbnails: traverseList(item, "thumbnails"),
 		}
 	}
@@ -85,8 +84,7 @@ export default class VideoParser {
 		const columns = traverseList(item, "flexColumns", "runs").flat()
 		const menu = traverseList(item, "menu", "items")
 
-		const views =
-			columns.find(obj => obj.text.includes("views") && !obj.navigationEndpoint) ?? null
+		const views = columns.find(obj => obj.text.includes("views") && !obj.navigationEndpoint)
 
 		const title = columns.find(isTitle) || columns[0]
 		const artist = columns.find(isArtist) || columns[1]
