@@ -179,7 +179,7 @@ export const NextResult = type({
 	artist: "string",
 	playlistId: "string",
 	videoId: "string",
-	selected: "boolean",
+	selected: "boolean|string",
 	params: "string",
 	thumbnails: [ThumbnailFull, "[]"],
 })

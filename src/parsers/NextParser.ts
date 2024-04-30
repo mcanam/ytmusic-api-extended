@@ -13,7 +13,7 @@ export default class NextParser {
 				artist: traverseString(playlistData, "longBylineText", "text"),
 				playlistId: traverseString(playlistData, "navigationEndpoint", "playlistId"),
 				videoId: traverseString(playlistData, "videoId"),
-				selected: traverseString(playlistData, "selected") === "true",
+				selected: traverseString(playlistData, "selected"),
 				params: traverseString(playlistData, "navigationEndpoint", "params"),
 				thumbnails: traverseList(playlistData, "thumbnails"),
 			},
