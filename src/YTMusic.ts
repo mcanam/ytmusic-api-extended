@@ -530,26 +530,30 @@ export default class YTMusic {
 		return results
 	}
 
-      /**
+	/**
 	 * Get content for next song.
 	 *
-       * @param videoId Video ID
+	 * @param videoId Video ID
 	 * @param playlistId Playlist ID
-       * @param paramString
-       * 
+	 * @param paramString
+	 *
 	 * @returns List of the next song
 	 */
-      async getNext(videoId: string, playlistId: string, paramString?: string): Promise<NextResult[]> {
-            const data = await this.constructRequest('next', {
-                  enablePersistentPlaylistPanel: true,
-                  isAudioOnly: true,
-                  params: paramString,
-                  playlistId: playlistId,
-                  tunerSettingValue: "AUTOMIX_SETTING_NORMAL",
-                  videoId: videoId
-            });
+	async getNext(
+		videoId: string,
+		playlistId: string,
+		paramString?: string,
+	): Promise<NextResult[]> {
+		const data = await this.constructRequest("next", {
+			enablePersistentPlaylistPanel: true,
+			isAudioOnly: true,
+			params: paramString,
+			playlistId: playlistId,
+			tunerSettingValue: "AUTOMIX_SETTING_NORMAL",
+			videoId: videoId,
+		})
 
-            const contents = traverse(traverseList(data, "tabs", "tabRenderer")[0], "contents");
-            return contents.map(NextParser.parse);
-      }
+		const contents = traverse(traverseList(data, "tabs", "tabRenderer")[0], "contents")
+		return contents.map(NextParser.parse)
+	}
 }
